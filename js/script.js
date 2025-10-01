@@ -15,6 +15,22 @@ const global = {
 
 const displayPopularMovies = async () => {
   const { results } = await fetchAPIData("movie/popular");
+  //! Fetch data from api
+  const fetchAPIData = async (endpoint) => {
+    const API_KEY = global.api.apiKey;
+    const API_URL = global.api.apiUrl;
+
+    showSpinner();
+
+    const response = await fetch(
+      `${API_URL}${endpoint}?api_key=${API_KEY}&language=en-US`
+    );
+    const data = await response.json();
+
+    hideSpinner();
+
+    return data;
+  };
 
   results.forEach((movie) => {
     const div = document.createElement("div");
@@ -43,6 +59,31 @@ const displayPopularMovies = async () => {
           </div>`;
     document.querySelector("#popular-movies").appendChild(div);
   });
+};
+
+//! making request to search
+const searchAPIData = async () => {
+  const API_KEY = global.api.apiKey;
+  const API_URL = global.api.apiUrl;
+
+  showSpinner();
+
+  const response = await fetch(
+    `${API_URL}search/${global.search.type}?api_key=${API_KEY}&language=en-US&query=${global.search.term}&page=${global.search.page}`
+  );
+  const data = await response.json();
+
+  hideSpinner();
+
+  return data;
+};
+
+const showSpinner = () => {
+  document.querySelector(".spinner").classList.add("show");
+};
+
+const hideSpinner = () => {
+  document.querySelector(".spinner").classList.remove("show");
 };
 
 const displayPopularShows = async () => {
@@ -392,48 +433,6 @@ const initSwiper = () => {
       },
     },
   });
-};
-
-//! Fetch data from api
-const fetchAPIData = async (endpoint) => {
-  const API_KEY = global.api.apiKey;
-  const API_URL = global.api.apiUrl;
-
-  showSpinner();
-
-  const response = await fetch(
-    `${API_URL}${endpoint}?api_key=${API_KEY}&language=en-US`
-  );
-  const data = await response.json();
-
-  hideSpinner();
-
-  return data;
-};
-
-//! making request to search
-const searchAPIData = async () => {
-  const API_KEY = global.api.apiKey;
-  const API_URL = global.api.apiUrl;
-
-  showSpinner();
-
-  const response = await fetch(
-    `${API_URL}search/${global.search.type}?api_key=${API_KEY}&language=en-US&query=${global.search.term}&page=${global.search.page}`
-  );
-  const data = await response.json();
-
-  hideSpinner();
-
-  return data;
-};
-
-const showSpinner = () => {
-  document.querySelector(".spinner").classList.add("show");
-};
-
-const hideSpinner = () => {
-  document.querySelector(".spinner").classList.remove("show");
 };
 
 //! Highlight active link
